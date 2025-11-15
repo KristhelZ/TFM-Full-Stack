@@ -1,0 +1,60 @@
+paths:
+  /api/health:
+    get:
+      summary: Healthcheck
+      responses:
+        '200':
+          description: OK
+
+  /api/auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200':
+          description: Tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string }
+                  refreshToken: { type: string }
+
+  /api/productos:
+    get:
+      summary: Listado público de productos activos
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Crear producto
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, price, stock]
+              properties:
+                name: { type: string }
+                brand: { type: string }
+                category: { type: string }
+                description: { type: string }
+                price: { type: number }
+                stock: { type: integer }
+                active: { type: boolean }
+      responses:
+        '201': { description: Creado }
+        '401': { description: Token requerido }
+        '403': { description: No autorizado }
